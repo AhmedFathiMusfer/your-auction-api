@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "BCS8OQwoQNODJ91Q7eNC+pHU1d69IBCH3UA0rSpfnuA=",
+  "Source": "your-auction-api",
+  "BasePath": "_content/your-auction-api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

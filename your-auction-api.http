@@ -1,0 +1,14 @@
+@your_auction_api_HostAddress = http://localhost:5106
+
+GET {{your_auction_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+POST {{your_auction_api_HostAddress}}/api/Auth/login
+Accept: application/json
+
+Date: 
+{
+    "UserName":"jhjh",
+    "Password":"fnjf"
+}
