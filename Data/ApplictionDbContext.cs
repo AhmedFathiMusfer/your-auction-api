@@ -31,10 +31,14 @@ namespace your_auction_api.Data
 
         public DbSet<ProductImage> productImages { get; set; }
 
+        public DbSet<AuctionUser> auctionUsers { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
+            builder.Entity<Auction>().Property(a => a.state).HasConversion<int>();
             base.OnModelCreating(builder);
         }
 

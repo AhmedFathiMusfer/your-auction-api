@@ -1,14 +1,9 @@
-@your_auction_api_HostAddress = http://localhost:5106
 
-GET {{your_auction_api_HostAddress}}/weatherforecast/
-Accept: application/json
 
-###
-POST {{your_auction_api_HostAddress}}/api/Auth/login
-Accept: application/json
+@host=http://localhost:5106
+		
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFobWVkQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImp0aSI6IkpUSTM4Yzg4OTQ1LWI1ZTYtNDlkNC1hNWY1LTNkMjljNDllNDdlNiIsInN1YiI6IjEwZGFlNzkwLTRjYWQtNDI0NC1iNTY0LTY5NjhkMjZjOGVmMCIsIm5iZiI6MTc0Mjg2MjQ4NSwiZXhwIjoxNzQyODY2MDg1LCJpYXQiOjE3NDI4NjI0ODV9.NYZVX-O-e5cT1Raz3MBKZV2sQkuOhgvWGddrXMkm3GM
 
-Date: 
-{
-    "UserName":"jhjh",
-    "Password":"fnjf"
-}
+GET  {{host}}/api/Product/GetAuctions
+Authorization: Bearer {{token}}
+Content-Type: application/json

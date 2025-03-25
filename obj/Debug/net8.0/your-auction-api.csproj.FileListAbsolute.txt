@@ -141,3 +141,6 @@ C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\ErrorOr.
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\FluentValidation.dll
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\your-auction-api.sourcelink.json
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\your-auction-api.staticwebassets.runtime.json
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

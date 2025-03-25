@@ -101,7 +101,8 @@ namespace your_auction_api.Services
                 UserName = regitsterationRequestDTO.UserName,
                 Name = regitsterationRequestDTO.Name,
                 Email = regitsterationRequestDTO.UserName,
-                NormalizedEmail = regitsterationRequestDTO.UserName.ToUpper()
+                NormalizedEmail = regitsterationRequestDTO.UserName.ToUpper(),
+                PhoneNumber = regitsterationRequestDTO.PhoneNumber
 
             };
             try
@@ -164,7 +165,7 @@ namespace your_auction_api.Services
 
 
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(3),
+                Expires = DateTime.UtcNow.AddMinutes(60),
 
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

@@ -1,0 +1,37 @@
+{
+  "Files": [
+    {
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\temp\\MyPicture.jpg",
+      "PackagePath": "staticwebassets\\Images\\temp\\MyPicture.jpg"
+    },
+    {
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\temp\\card.jpg",
+      "PackagePath": "staticwebassets\\Images\\temp\\card.jpg"
+    },
+    {
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\temp\\messages-3.jpg",
+      "PackagePath": "staticwebassets\\Images\\temp\\messages-3.jpg"
+    },
+    {
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\temp\\news-1.jpg",
+      "PackagePath": "staticwebassets\\Images\\temp\\news-1.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.your-auction-api.props",
+      "PackagePath": "build\\your-auction-api.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.your-auction-api.props",
+      "PackagePath": "buildMultiTargeting\\your-auction-api.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.your-auction-api.props",
+      "PackagePath": "buildTransitive\\your-auction-api.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.your-auction-api.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
