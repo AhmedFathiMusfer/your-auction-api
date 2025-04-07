@@ -1,20 +1,28 @@
 {
   "Files": [
     {
-      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\temp\\MyPicture.jpg",
-      "PackagePath": "staticwebassets\\Images\\temp\\MyPicture.jpg"
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\products\\11\\11277edb-c6d7-4144-abee-3ccab23e593c.jpg",
+      "PackagePath": "staticwebassets\\Images\\products\\11\\11277edb-c6d7-4144-abee-3ccab23e593c.jpg"
     },
     {
-      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\temp\\card.jpg",
-      "PackagePath": "staticwebassets\\Images\\temp\\card.jpg"
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\products\\3\\product-2.jpg",
+      "PackagePath": "staticwebassets\\Images\\products\\3\\product-2.jpg"
     },
     {
-      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\temp\\messages-3.jpg",
-      "PackagePath": "staticwebassets\\Images\\temp\\messages-3.jpg"
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\products\\4\\messages-3.jpg",
+      "PackagePath": "staticwebassets\\Images\\products\\4\\messages-3.jpg"
     },
     {
-      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\temp\\news-1.jpg",
-      "PackagePath": "staticwebassets\\Images\\temp\\news-1.jpg"
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\products\\5\\1538bb08-ad25-43c6-ac87-486b0f19d5f4.jpg",
+      "PackagePath": "staticwebassets\\Images\\products\\5\\1538bb08-ad25-43c6-ac87-486b0f19d5f4.jpg"
+    },
+    {
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\products\\5\\69b67623-8d84-41c0-805a-078ad8d75698.jpg",
+      "PackagePath": "staticwebassets\\Images\\products\\5\\69b67623-8d84-41c0-805a-078ad8d75698.jpg"
+    },
+    {
+      "Id": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\wwwroot\\Images\\products\\9\\5fc6dbc4-52bd-432c-a7de-45b51588b2fb.jpg",
+      "PackagePath": "staticwebassets\\Images\\products\\9\\5fc6dbc4-52bd-432c-a7de-45b51588b2fb.jpg"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.your-auction-api.props",

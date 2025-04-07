@@ -1,6 +1,7 @@
 
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using ErrorOr;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -15,31 +16,29 @@ namespace your_auction_api.Services
     {
         private readonly IProductRepository _productRepository;
 
-        private readonly IProductImageRepository _productImageRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IFileService _fileService;
         private IValidator<ProductDto> _productValidator;
 
         public ProductService(IValidator<ProductDto> productValidator, IProductRepository productRepository,
-         IProductImageRepository productImageRepository, IFileService fileService,
+      IFileService fileService,
          IHttpContextAccessor httpContextAccessor)
         {
             _productValidator = productValidator;
             _productRepository = productRepository;
-            _productImageRepository = productImageRepository;
+
             _fileService = fileService;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ErrorOr<String>> AddImageToProduct(IFormFile image)
-        {
-            var result = await _fileService.UploadImageToTemp(image);
-            if (result.IsError)
-            {
-                return result.Errors;
-            }
-            return result;
-        }
+        /// <summary>
+        /// Add a new product to the database.  
+        /// /// </summary>
+        /// <param name="productDto">The product data transfer object containing the product details.</param>
+        /// /// <returns>An ErrorOr object indicating the success or failure of the operation.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when the productDto is null.</exception>
+        /// <exception cref="ValidationException">Thrown when the productDto fails validation.</exception>
+        /// 
 
         public async Task<ErrorOr<Success>> AddProduct(ProductDto productDto)
         {
@@ -60,9 +59,14 @@ namespace your_auction_api.Services
                 IsChecked = productDto.IsChecked,
                 images = productDto.images
             };
-            var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
-            product.UserId = userId;
+            var clims = _httpContextAccessor.HttpContext.User.Claims.ToList();
+            if (clims.Count == 0)
+            {
+                Console.WriteLine("kdd");
+            }
 
+            var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(t => t.Type == ClaimTypes.NameIdentifier).Value;
+            product.UserId = userId;
             await _productRepository.CreateAsync(product);
             var result = await _fileService.MoveImgeFromTempToProduct(product);
             if (result.IsError)
@@ -85,10 +89,10 @@ namespace your_auction_api.Services
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<Product>> getProductById(int productId)
+        public async Task<ErrorOr<PoroductResponceDto>> getProductById(int productId)
         {
-            var product = await _productRepository.GetAsync(p => p.Id == productId);
-            if (product == null)
+            var product = (await _productRepository.GetWithDetailsAsync(p => p.Id == productId)).FirstOrDefault();
+            if (product is null)
             {
                 return Error.NotFound(description: "the product  not found");
             }
@@ -96,9 +100,10 @@ namespace your_auction_api.Services
             return product;
         }
 
-        public async Task<ErrorOr<List<Product>>> GetProducts()
+        public async Task<ErrorOr<List<PoroductResponceDto>>> GetProducts()
         {
-            var products = await _productRepository.GetAllAsync();
+            var products = await _productRepository.GetWithDetailsAsync();
+
 
             return products;
         }

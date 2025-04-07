@@ -9,7 +9,7 @@ namespace your_auction_api.Services.IServices
     {
 
         Task<ErrorOr<TokenDTO>> Login(LoginRequestDTO loginRequestDTO);
-        Task<ErrorOr<UserDTO>> Register(RegisterationRequestDTO regitsterationRequestDTO);
+        Task<ErrorOr<TokenDTO>> Register(RegisterationRequestDTO regitsterationRequestDTO);
         /*   Task<TokenDTO> RefreshAccessToken(TokenDTO tokenDTO);
            Task RevokeAccessToken(TokenDTO tokenDTO);
            Task<ForgetPassworedDTO> ForgetPasswored(ForgetPassworedDTO forgetPassworedDTO);

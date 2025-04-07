@@ -15,6 +15,7 @@ namespace your_auction_api.Controllers
 
     [Route("api/[controller]")]
     [Authorize]
+
     public class AuctionController : ApiController
     {
 
@@ -50,16 +51,16 @@ namespace your_auction_api.Controllers
         {
             var result = await _auctionService.AddAuction(auctionDto);
             return result.Match(
-                success => Ok(success),
+                success => Created(),
                 Problem
             );
         }
         [HttpPost("{auctionId}/AddAuctionUser")]
-        public async Task<IActionResult> AddAuctionUser([FromBody] AuctionUser auctionUser)
+        public async Task<IActionResult> AddAuctionUser([FromForm] int auctionId, decimal AuctionValue)
         {
-            var result = await _auctionService.AddAuctionUser(auctionUser);
+            var result = await _auctionService.AddAuctionUser(auctionId, AuctionValue);
             return result.Match(
-                success => Ok(success),
+                success => Created(),
                 Problem
             );
         }
@@ -77,7 +78,7 @@ namespace your_auction_api.Controllers
         {
             var result = await _auctionService.CanceledAuction(auctionId);
             return result.Match(
-                success => Ok(success),
+                success => NoContent(),
                 Problem
             );
         }
@@ -86,7 +87,7 @@ namespace your_auction_api.Controllers
         {
             var result = await _auctionService.DeleteAuction(auctionId);
             return result.Match(
-                deleted => Ok(deleted),
+                deleted => NoContent(),
                 Problem
             );
         }

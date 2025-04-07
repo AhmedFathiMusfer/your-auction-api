@@ -11,7 +11,7 @@ namespace your_auction_api.Validation
     {
         public LoginRequestDTOValidation()
         {
-            RuleFor(l => l.UserName).EmailAddress().NotEmpty().NotNull();
+            RuleFor(l => l.email).EmailAddress().NotEmpty().NotNull();
             RuleFor(l => l.Password).NotEmpty().NotNull();
         }
 

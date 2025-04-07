@@ -29,7 +29,9 @@ namespace your_auction_api.Data.Repository
             {
                 Id = au.Id,
                 userName = au.User.Name,
-                auctionValue = au.AuctionValue
+                auctionValue = au.AuctionValue,
+                aucthionId = au.AuctionId
+
             }).ToList();
             return auctionUsers;
         }

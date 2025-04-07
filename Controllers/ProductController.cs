@@ -45,7 +45,7 @@ namespace your_auction_api.Controllers
               );
         }
         [HttpPost]
-        public async Task<IActionResult> Add([FromForm] ProductDto productDto)
+        public async Task<IActionResult> Add(ProductDto productDto)
         {
             var result = await _productService.AddProduct(productDto);
 
@@ -54,20 +54,11 @@ namespace your_auction_api.Controllers
                Problem
               );
         }
-        [HttpPost("Image")]
-        public async Task<IActionResult> AddImage(IFormFile image)
-        {
-            var result = await _productService.AddImageToProduct(image);
 
-            return result.Match(
-               result => Ok(result),
-               Problem
-              );
-        }
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int productId, [FromForm] ProductDto productDto)
+        public async Task<IActionResult> Update(int Id, ProductDto productDto)
         {
-            var result = await _productService.UpdateProduct(productId, productDto);
+            var result = await _productService.UpdateProduct(Id, productDto);
 
             return result.Match(
                result => Ok(result),

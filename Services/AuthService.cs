@@ -4,13 +4,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using ErrorOr;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using your_auction_api.Data;
 using your_auction_api.Models;
 using your_auction_api.Models.Dto;
@@ -43,7 +43,7 @@ namespace your_auction_api.Services
 
         private bool IsUniqueUser(string username)
         {
-            var user = _db.Users.FirstOrDefault(u => u.UserName.ToLower() == username.ToLower());
+            var user = _db.users.FirstOrDefault(u => u.UserName.ToLower() == username.ToLower());
             if (user == null)
             {
                 return true;
@@ -65,7 +65,7 @@ namespace your_auction_api.Services
                 AccessToken = ""
             };
 
-            var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
+            var user = await _db.users.AsNoTracking().FirstOrDefaultAsync(u => u.Email.ToLower() == loginRequestDTO.email.ToLower());
             var checkPassword = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
 
             if (user == null || checkPassword == false)
@@ -73,22 +73,19 @@ namespace your_auction_api.Services
                 return Error.NotFound(description: "the email or password is wrong");
             }
 
+
             var JWTTokenId = $"JTI{Guid.NewGuid()}";
             //    var Refreshtoken = await CreateNewRefreshToken(user.Id, JWTTokenId);
             var JWTToken = await GetAccessTokenAsync(user, JWTTokenId);
             TokenDTO.AccessToken = JWTToken;
+            TokenDTO.UserData = _mapper.Map<UserDTO>(user);
+
             //TokenDTO.RefreshToken = Refreshtoken;
             //  TokenDTO = await RefreshAccessToken(TokenDTO);
-
-
-
-
-
-
             return TokenDTO;
         }
 
-        public async Task<ErrorOr<UserDTO>> Register(RegisterationRequestDTO regitsterationRequestDTO)
+        public async Task<ErrorOr<TokenDTO>> Register(RegisterationRequestDTO regitsterationRequestDTO)
         {
             var resultValidator = _registerValidator.Validate(regitsterationRequestDTO);
             if (!resultValidator.IsValid)
@@ -98,19 +95,23 @@ namespace your_auction_api.Services
             }
             ApplicationUser user = new ApplicationUser()
             {
-                UserName = regitsterationRequestDTO.UserName,
+                UserName = regitsterationRequestDTO.email,
                 Name = regitsterationRequestDTO.Name,
-                Email = regitsterationRequestDTO.UserName,
-                NormalizedEmail = regitsterationRequestDTO.UserName.ToUpper(),
-                PhoneNumber = regitsterationRequestDTO.PhoneNumber
-
+                Email = regitsterationRequestDTO.email,
+                NormalizedEmail = regitsterationRequestDTO.email.ToUpper(),
+                PhoneNumber = regitsterationRequestDTO.PhoneNumber,
+                ProfilePictureUrl = regitsterationRequestDTO.ProfilePictureUrl,
             };
             try
             {
-                var IsUserAlready = IsUniqueUser(regitsterationRequestDTO.UserName);
+                var IsUserAlready = IsUniqueUser(regitsterationRequestDTO.email);
                 if (!IsUserAlready)
                 {
                     return Error.Validation(description: "this user is already");
+                }
+                if (regitsterationRequestDTO.ProfilePictureUrl == null)
+                {
+                    user.ProfilePictureUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkHK1r9yETPVWLrSSUQ_mdp-LvxQPsCAk39w&s";
                 }
                 var result = await _userManager.CreateAsync(user, regitsterationRequestDTO.Password);
 
@@ -131,11 +132,20 @@ namespace your_auction_api.Services
                     }
 
 
-                    var UserToReturn = _db.Users.FirstOrDefault(u => u.UserName == regitsterationRequestDTO.UserName);
+                    var UserToReturn = _db.Users.FirstOrDefault(u => u.UserName == regitsterationRequestDTO.email);
 
 
-                    var UserDTO = _mapper.Map<UserDTO>(UserToReturn);
-                    return UserDTO;
+                    var JWTTokenId = $"JTI{Guid.NewGuid()}";
+                    //    var Refreshtoken = await CreateNewRefreshToken(user.Id, JWTTokenId);
+                    var JWTToken = await GetAccessTokenAsync(user, JWTTokenId);
+
+                    TokenDTO TokenDTO = new()
+                    {
+                        AccessToken = JWTToken,
+                        UserData = _mapper.Map<UserDTO>(UserToReturn)
+                    };
+
+                    return TokenDTO;
                 }
                 var errors = result.Errors.Select(e => Error.Validation(description: e.Description)).ToList();
                 return errors;
@@ -153,26 +163,19 @@ namespace your_auction_api.Services
             //Generate Token
             var tokenhandeler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(SecertKey);
-
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
+                Subject = new ClaimsIdentity(
+                [
                     new Claim(ClaimTypes.Name, user.UserName.ToString()),
-                    new Claim(ClaimTypes.Role, role.FirstOrDefault()),
+                    new Claim(ClaimTypes.Role, JsonConvert.SerializeObject(role)),
                     new Claim(JwtRegisteredClaimNames.Jti,JWTTokenId),
                     new Claim(JwtRegisteredClaimNames.Sub,user.Id)
-
-
-                }),
+                ]),
                 Expires = DateTime.UtcNow.AddMinutes(60),
-
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var userDTO = _mapper.Map<UserDTO>(user);
-
             var token = tokenhandeler.CreateToken(tokenDescriptor);
-
             return tokenhandeler.WriteToken(token);
         }
 

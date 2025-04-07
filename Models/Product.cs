@@ -15,12 +15,13 @@ namespace your_auction_api.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         public bool IsChecked { get; set; }
-        public string Emp_note { get; set; }
+        public string? Emp_note { get; set; }
 
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
-
+        [JsonIgnore]
         public Category Category { get; set; }
+        [JsonIgnore]
         public ApplicationUser User { get; set; }
         [JsonIgnore]
         public ICollection<ProductImage> ProductImages { get; set; }

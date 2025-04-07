@@ -9,6 +9,9 @@ namespace your_auction_api.Services.IServices
         Task<ErrorOr<String>> UploadImageToTemp(IFormFile file);
         Task<ErrorOr<Success>> MoveImgeFromTempToProduct(Product product);
 
-        Task<ErrorOr<Deleted>> DeleteImage(string ImageUrl);
+        Task<ErrorOr<Deleted>> DeleteImageFromProduct(int ProductId, string ImageUrl);
+        Task<ErrorOr<Deleted>> DeleteImageFromTemp(string ImageUrl);
+        Task<ErrorOr<String>> UploadImageToProduct(IFormFile file, int ProductId);
+
     }
 }

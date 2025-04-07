@@ -1,4 +1,5 @@
 
+using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using ErrorOr;
 using FluentValidation;
@@ -46,9 +47,10 @@ namespace your_auction_api.Services
 
         }
 
-        public async Task<ErrorOr<Success>> AddAuctionUser(AuctionUser auctionUser)
+        public async Task<ErrorOr<Success>> AddAuctionUser(int auctionId, decimal AuctionValue)
+
         {
-            var auction = await _auctionRepository.GetAsync(a => a.Id == auctionUser.AuctionId, Tracked: false, includeProperties: "Product");
+            var auction = await _auctionRepository.GetAsync(a => a.Id == auctionId, Tracked: false, includeProperties: "Product");
             if (auction is null)
             {
                 return Error.NotFound("this aucthion is not found");
@@ -57,22 +59,28 @@ namespace your_auction_api.Services
             {
                 return Error.Validation(code: "state", description: $"this aucthion state is {auction.state}");
             }
-            var UserId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+            var UserId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             if (UserId is null)
             {
                 return Error.Unauthorized(description: "an Unauthorized");
             }
-            if (auctionUser.AuctionValue < auction.Product.Price)
+            if (AuctionValue < auction.Product.Price)
             {
                 return Error.Validation(code: "AuctionValue", description: $"the price is unvaild becuse shold be greater than Or equal To {auction.Product.Price}");
             }
-            auctionUser.UserId = UserId;
-            auctionUser.startDate = DateTime.Now;
+            var auctionUser = new AuctionUser
+            {
+                AuctionId = auctionId,
+                AuctionValue = AuctionValue,
+                UserId = UserId,
+                startDate = DateTime.Now
+            };
+
             await _auctionUserRepository.CreateAsync(auctionUser);
             return Result.Success;
-
-
         }
+
+
 
         public async Task<ErrorOr<Success>> CanceledAuction(int auctionId)
         {
@@ -81,7 +89,7 @@ namespace your_auction_api.Services
             {
                 return Error.NotFound("this aucthion is not found");
             }
-            var UserId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+            var UserId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             if (UserId is null)
             {
                 return Error.Unauthorized(description: "an Unauthorized");

@@ -18,118 +18,133 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using your_auction_api;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-
-var key = builder.Configuration.GetValue<string>("ApiSettings:Secert");
-
-builder.Services.AddCors(options =>
+internal class Program
 {
-    options.AddPolicy(name: "_myAllowSpecificOrigins",
-        policy =>
+    private static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Add services to the container.
+
+        builder.Services.AddControllers(option =>
+ {
+     option.CacheProfiles.Add("Default30", new CacheProfile()
+     {
+         Duration = 30,
+
+     });
+     option.ReturnHttpNotAcceptable = false;
+ }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
+        builder.Services.AddDbContext<ApplicationDbContext>(option =>
         {
-            policy.WithOrigins("http://localhost:4200")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
+            option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
         });
-});
-/*builder.Services.AddSession(s =>
-{
-    s.IdleTimeout = TimeSpan.FromMinutes(30);
-    s.Cookie.HttpOnly = true;
-    s.Cookie.IsEssential = false;
-});*/
-//builder.Services.AddHttpContextAccessor();
-builder.Services.AddAuthentication(option =>
-{
-    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-
-
-}).AddJwtBearer(a =>
-{
-    a.RequireHttpsMetadata = false;
-    a.SaveToken = true;
-    a.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        ClockSkew = TimeSpan.Zero,
-
-
-    };
-
-
-});
-//builder.Services.AddHostedService<webhoste>();
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
-});
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddAutoMapper(typeof(Mapping));
-builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen();
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-builder.Services.AddScoped<IEmailSender, EmailSender>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
-builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
-builder.Services.AddScoped<IAuctionService, AuctionService>();
-builder.Services.AddScoped<IAuctionUserRepository, AuctionUserRepository>();
-builder.Services.AddMemoryCache();
-builder.Services.AddScoped<IFileService, FileService>();
-builder.Services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
-{
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+        builder.Services.AddResponseCaching();
+        var key = builder.Configuration.GetValue<string>("ApiSettings:Secert");
+        builder.Services.AddApiVersioning(option =>
         {
-            Console.WriteLine("JWT Authentication Failed: " + context.Exception.Message);
-            Debug.WriteLine("JWT Authentication Failed: " + context.Exception.Message);
-            return Task.CompletedTask;
-        },
-        OnChallenge = context =>
+            option.AssumeDefaultVersionWhenUnspecified = true;
+            option.DefaultApiVersion = new ApiVersion(1, 0);
+            option.ReportApiVersions = true;
+        });
+        builder.Services.AddVersionedApiExplorer(option =>
         {
-            Console.WriteLine("JWT Challenge Failed: " + context.AuthenticateFailure?.Message);
-            Debug.WriteLine("JWT Challenge Failed: " + context.AuthenticateFailure?.Message);
-            return Task.CompletedTask;
+            option.GroupNameFormat = "'v'VVV";
+            option.SubstituteApiVersionInUrl = true;
+        });
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        //builder.Services.AddSingleton<ILogging, Logging>();
+        builder.Services.AddAutoMapper(typeof(Mapping));
+        builder.Services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+        }).AddJwtBearer(t =>
+        {
+            t.RequireHttpsMetadata = false;
+            t.SaveToken = true;
+            t.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+
+            };
+        });
+        // 
+        builder.Services.AddCors(option =>
+        {
+            option.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            });
+        });
+        builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        //builder.Services.AddSwaggerGen();
+
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+        builder.Services.AddScoped<IEmailSender, EmailSender>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
+        builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+        builder.Services.AddScoped<IAuctionService, AuctionService>();
+        builder.Services.AddScoped<IAuctionUserRepository, AuctionUserRepository>();
+        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddMemoryCache();
+        builder.Services.AddScoped<IFileService, FileService>();
+
+
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(option =>
+            {
+                option.SwaggerEndpoint("/swagger/v1/swagger.json", "Property_WepAPIv1");
+                option.SwaggerEndpoint("/swagger/v2/swagger.json", "Property_WepAPIv2");
+            });
+
+
+
         }
-    };
-});
+        app.UseStaticFiles();
+        app.UseHttpsRedirection();
+        app.UseCors("CorsPolicy");
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.MapControllers();
+        ApplyMigrations();
 
+        app.Run();
 
-
-var app = builder.Build();
-app.UseStaticFiles();
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        void ApplyMigrations()
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var _db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                if (_db.Database.GetPendingMigrations().Count() > 0)
+                {
+                    _db.Database.Migrate();
+                }
+            }
+        }
+    }
 }
-
-app.UseHttpsRedirection();
-//app.UseCors("_myAllowSpecificOrigins");
-//app.UseSession();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

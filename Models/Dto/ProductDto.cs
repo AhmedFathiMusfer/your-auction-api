@@ -15,7 +15,7 @@ namespace your_auction_api.Models.Dto
 
         public bool IsChecked { get; set; }
         public int CategoryId { get; set; }
-        public List<string> images { get; set; }
+        public List<string>? images { get; set; }
 
 
 

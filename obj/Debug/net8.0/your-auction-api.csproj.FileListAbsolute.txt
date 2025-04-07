@@ -144,3 +144,9 @@ C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\FluentVa
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\your-auction-api.sourcelink.json
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\your-auction-api.staticwebassets.runtime.json
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.Versioning.dll
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer.dll
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll

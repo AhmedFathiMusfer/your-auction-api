@@ -2,7 +2,7 @@
 {
   public class TokenDTO
   {
-    //  public UserDTO? User { get; set; }
+    public UserDTO? UserData { get; set; }
     public string? AccessToken { get; set; }
     public string? RefreshToken { get; set; }
   }

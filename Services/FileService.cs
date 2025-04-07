@@ -13,20 +13,48 @@ namespace your_auction_api.Services
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
 
+        private readonly IProductImageRepository _productImageRepository;
         private readonly IProductRepository _productRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private string basePath;
         public FileService(IWebHostEnvironment webHostEnvironment,
-        IProductRepository productRepository, IHttpContextAccessor httpContextAccessor)
+        IProductImageRepository productImageRepository,
+         IHttpContextAccessor httpContextAccessor,
+         IProductRepository productRepository)
         {
             _webHostEnvironment = webHostEnvironment;
-            _productRepository = productRepository;
+            _productImageRepository = productImageRepository;
             _httpContextAccessor = httpContextAccessor;
+            _productRepository = productRepository;
+
+            basePath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host.Value}{_httpContextAccessor.HttpContext.Request.PathBase.Value}";
         }
 
-        public Task<ErrorOr<Deleted>> DeleteImage(string ImageUrl)
+        public async Task<ErrorOr<Deleted>> DeleteImageFromProduct(int ProductId, string ImageUrl)
         {
-            throw new NotImplementedException();
+            var productImage = await _productImageRepository.GetAsync(pi => pi.ProductId == ProductId && pi.ImageUrl == ImageUrl);
+            if (productImage is null)
+            {
+                return Error.Validation(code: "images", description: "fial when delete the image");
+            }
+            var ImgeBath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "products", ProductId.ToString(), Path.GetFileName(ImageUrl));
+            if (File.Exists(ImgeBath))
+            {
+                File.Delete(ImgeBath);
+            }
+            await _productImageRepository.RemoveAsync(productImage);
+            return Result.Deleted;
+        }
+
+        public async Task<ErrorOr<Deleted>> DeleteImageFromTemp(string ImageUrl)
+        {
+            var tempFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "temp", Path.GetFileName(ImageUrl));
+            if (File.Exists(tempFilePath))
+            {
+                File.Delete(tempFilePath);
+            }
+            return Result.Deleted; ;
         }
 
         public async Task<ErrorOr<Success>> MoveImgeFromTempToProduct(Product product)
@@ -47,17 +75,52 @@ namespace your_auction_api.Services
                 if (File.Exists(tempFilePath))
                 {
                     File.Move(tempFilePath, newFilePath);
-                    product.ProductImages.Add(new ProductImage
+                    await _productImageRepository.CreateAsync(new ProductImage
                     {
-                        ImageUrl = newFilePath
+                        ImageUrl = $"{basePath}/Images/products/{product.Id}/{Path.GetFileName(image)}",
+                        ProductId = product.Id
+
                     });
+
                 }
 
 
             }
-            await _productRepository.UpdateAsync(product);
+
 
             return Result.Success;
+        }
+
+        public async Task<ErrorOr<string>> UploadImageToProduct(IFormFile file, int ProductId)
+        {
+            if (file is null)
+            {
+                return Error.Validation(code: "image", description: "fill in uploade image");
+            }
+            var product = await _productRepository.GetAsync(p => p.Id == ProductId);
+            if (product is null)
+            {
+                return Error.Validation(code: "image", description: "the product not found");
+            }
+            var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "products", ProductId.ToString());
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            var FileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+            var filePath = Path.Combine(folderPath, FileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            await _productImageRepository.CreateAsync(new ProductImage
+            {
+                ImageUrl = $"{basePath}/Images/products/{ProductId}/{FileName}",
+                ProductId = ProductId
+
+            });
+
+            return $"{basePath}/Images/products/{ProductId}/{file.FileName}";
         }
 
         public async Task<ErrorOr<string>> UploadImageToTemp(IFormFile image)
@@ -71,15 +134,17 @@ namespace your_auction_api.Services
             {
                 Directory.CreateDirectory(folderPath);
             }
-            var filePath = Path.Combine(folderPath, image.FileName);
+            var FileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+
+            var filePath = Path.Combine(folderPath, FileName);
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await image.CopyToAsync(stream);
 
 
             }
-            var basePath = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host.Value}{_httpContextAccessor.HttpContext.Request.PathBase.Value}";
-            return $"{basePath}/Images//temp/{image.FileName}";
+
+            return $"{basePath}/Images/temp/{FileName}";
 
 
 
