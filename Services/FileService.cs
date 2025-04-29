@@ -36,7 +36,7 @@ namespace your_auction_api.Services
             var productImage = await _productImageRepository.GetAsync(pi => pi.ProductId == ProductId && pi.ImageUrl == ImageUrl);
             if (productImage is null)
             {
-                return Error.Validation(code: "images", description: "fial when delete the image");
+                return Error.Validation(code: "images", description: "file when delete the image");
             }
             var ImgeBath = Path.Combine(_webHostEnvironment.WebRootPath, "Images", "products", ProductId.ToString(), Path.GetFileName(ImageUrl));
             if (File.Exists(ImgeBath))
@@ -120,7 +120,7 @@ namespace your_auction_api.Services
 
             });
 
-            return $"{basePath}/Images/products/{ProductId}/{file.FileName}";
+            return $"{basePath}/Images/products/{ProductId}/{FileName}";
         }
 
         public async Task<ErrorOr<string>> UploadImageToTemp(IFormFile image)

@@ -6,7 +6,7 @@ using your_auction_api.MapppingConfig;
 using your_auction_api.Models;
 using your_auction_api.Services;
 using your_auction_api.Services.IServices;
-using your_auction_api.Services;
+
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using your_auction_api.Data.Repository.IRepository;
@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using your_auction_api;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 
 internal class Program
 {
@@ -97,7 +98,7 @@ internal class Program
         builder.Services.AddValidatorsFromAssemblyContaining<Program>();
         builder.Services.AddScoped<IEmailSender, EmailSender>();
         builder.Services.AddScoped<IAuthService, AuthService>();
-        builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IProductService, your_auction_api.Services.ProductService>();
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
         builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
@@ -105,11 +106,10 @@ internal class Program
         builder.Services.AddScoped<IAuctionUserRepository, AuctionUserRepository>();
         builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
         builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddScoped<IStripeCustomerRepository, StripeCustomerRepository>();
+        builder.Services.AddScoped<IStripeCustomerService, StripeCustomerService>();
         builder.Services.AddMemoryCache();
-        builder.Services.AddScoped<IFileService, FileService>();
-
-
-
+        builder.Services.AddScoped<IFileService, your_auction_api.Services.FileService>();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -130,6 +130,7 @@ internal class Program
         app.UseCors("CorsPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
+        StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripeKey:SecretKey");
         app.MapControllers();
         ApplyMigrations();
 

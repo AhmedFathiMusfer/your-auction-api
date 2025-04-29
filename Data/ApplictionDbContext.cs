@@ -32,6 +32,7 @@ namespace your_auction_api.Data
         public DbSet<ProductImage> productImages { get; set; }
 
         public DbSet<AuctionUser> auctionUsers { get; set; }
+        public DbSet<StripeCustomer> stripeCustomers { get; set; }
 
 
 

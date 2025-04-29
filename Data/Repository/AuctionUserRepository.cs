@@ -28,7 +28,7 @@ namespace your_auction_api.Data.Repository
             var auctionUsers = _db.auctionUsers.Where(au => au.AuctionId == AuctionId).Select(au => new AuctionUserDto
             {
                 Id = au.Id,
-                userName = au.User.Name,
+                name = au.User.Name,
                 auctionValue = au.AuctionValue,
                 aucthionId = au.AuctionId
 

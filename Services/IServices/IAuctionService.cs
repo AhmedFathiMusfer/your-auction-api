@@ -14,9 +14,11 @@ namespace your_auction_api.Services.IServices
         Task<ErrorOr<Success>> AddAuctionUser(int auctionId, decimal AuctionValue);
         Task<ErrorOr<Success>> UpdateAuction(int auctionId, AuctionDto auctionDto);
         Task<ErrorOr<Success>> CanceledAuction(int auctionId);
+        Task<ErrorOr<Success>> CompletedAuction(int auctionId);
 
         // Task<ErrorOr<String>> AddImageToProduct(IFormFile image);
-        Task<ErrorOr<AuctionDetailsDto>> detailsAuction(int auctionId);
+        Task<ErrorOr<AuctionDetailsDto>> getAuctionWithDetails(int auctionId);
+        Task<ErrorOr<List<AuctionDetailsDto>>> getAllAuctionsWithDetails();
         Task<ErrorOr<List<AuctionUserDto>>> getAuctionUsers(int auctionId);
         Task<ErrorOr<Deleted>> DeleteAuction(int auctionId);
     }

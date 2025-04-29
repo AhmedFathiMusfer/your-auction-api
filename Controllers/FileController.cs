@@ -34,16 +34,16 @@ namespace your_auction_api.Controllers
                 result => Ok(new { url = result }),
                 Problem);
         }
-        [HttpDelete("DeleteImageFromProduct/{ProductId}")]
-        public async Task<IActionResult> DeleteImageFromProduct(int ProductId, string ImageUrl)
+        [HttpPut("DeleteImageFromProduct/{ProductId:int}")]
+        public async Task<IActionResult> DeleteImageFromProduct(int ProductId, [FromQuery] string ImageUrl)
         {
             var result = await _fileService.DeleteImageFromProduct(ProductId, ImageUrl);
             return result.Match(
                 result => NoContent(),
                 Problem);
         }
-        [HttpDelete("DeleteImageFromTemp")]
-        public async Task<IActionResult> DeleteImageFromTemp(string ImageUrl)
+        [HttpPut("DeleteImageFromTemp")]
+        public async Task<IActionResult> DeleteImageFromTemp([FromQuery] string ImageUrl)
         {
             var result = await _fileService.DeleteImageFromTemp(ImageUrl);
             return result.Match(

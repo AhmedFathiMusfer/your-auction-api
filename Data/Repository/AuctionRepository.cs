@@ -1,6 +1,8 @@
 
 
 using System.IO.Compression;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using your_auction_api.Data.Repository.IRepository;
 using your_auction_api.Models;
@@ -18,24 +20,32 @@ namespace your_auction_api.Data.Repository
 
 
 
-        public async Task<AuctionDetailsDto> DetailsAsync(int AuctionId)
+        public async Task<List<AuctionDetailsDto>> GetWithDetailsAsync(Expression<Func<Auction, bool>>? filter = null)
         {
-
-            var datialsAuction = _db.auctions.Where(a => a.Id == AuctionId).Select(a => new AuctionDetailsDto
+            IQueryable<Auction> Auctions = _db.auctions;
+            if (filter != null)
             {
+                Auctions.Where(filter);
+            }
+            var detialsAuctions = Auctions.Select(a => new AuctionDetailsDto
+            {
+                Id = a.Id,
+                ProductName = a.Product.Name,
                 SalleName = a.Product.User.Name,
                 StartDate = a.Start_date,
+                price = a.Product.Price,
+                quantity = a.Product.Quantity,
+                ImagesUrl = a.Product.ProductImages.Select(i => i.ImageUrl).ToList(),
                 EndDate = a.End_date,
                 State = a.state.ToString(),
+                NumberOfBidders = a.Users.Count()
 
 
 
-            }).FirstOrDefault();
-            if (datialsAuction != null)
-            {
-                datialsAuction.NumberOfBidders = _db.auctionUsers.Where(a => a.AuctionId == AuctionId).Count();
-            }
-            return datialsAuction;
+
+            });
+
+            return await detialsAuctions.ToListAsync();
 
 
 

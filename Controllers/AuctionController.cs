@@ -47,7 +47,7 @@ namespace your_auction_api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAuction([FromBody] AuctionDto auctionDto)
+        public async Task<IActionResult> AddAuction(AuctionDto auctionDto)
         {
             var result = await _auctionService.AddAuction(auctionDto);
             return result.Match(
@@ -55,7 +55,7 @@ namespace your_auction_api.Controllers
                 Problem
             );
         }
-        [HttpPost("{auctionId}/AddAuctionUser")]
+        [HttpPost("{auctionId}/addBider")]
         public async Task<IActionResult> AddAuctionUser([FromForm] int auctionId, decimal AuctionValue)
         {
             var result = await _auctionService.AddAuctionUser(auctionId, AuctionValue);
@@ -82,6 +82,15 @@ namespace your_auction_api.Controllers
                 Problem
             );
         }
+        [HttpPut("{auctionId}/Completed")]
+        public async Task<IActionResult> CompletedAuction(int auctionId)
+        {
+            var result = await _auctionService.CompletedAuction(auctionId);
+            return result.Match(
+                success => NoContent(),
+                Problem
+            );
+        }
         [HttpDelete("{auctionId}")]
         public async Task<IActionResult> DeleteAuction(int auctionId)
         {
@@ -94,13 +103,22 @@ namespace your_auction_api.Controllers
         [HttpGet("{auctionId}/details")]
         public async Task<IActionResult> detailsAuction(int auctionId)
         {
-            var result = await _auctionService.detailsAuction(auctionId);
+            var result = await _auctionService.getAuctionWithDetails(auctionId);
             return result.Match(
                 auctionDetails => Ok(auctionDetails),
                 Problem
             );
         }
-        [HttpGet("{auctionId}/users")]
+        [HttpGet("WithDetails")]
+        public async Task<IActionResult> getAllWithDetails()
+        {
+            var result = await _auctionService.getAllAuctionsWithDetails();
+            return result.Match(
+                auctionDetails => Ok(auctionDetails),
+                Problem
+            );
+        }
+        [HttpGet("{auctionId}/bidders")]
         public async Task<IActionResult> getAuctionUsers(int auctionId)
         {
             var result = await _auctionService.getAuctionUsers(auctionId);

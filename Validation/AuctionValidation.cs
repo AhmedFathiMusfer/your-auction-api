@@ -9,13 +9,7 @@ namespace your_auction_api.Validation
     {
         public AuctionValidation()
         {
-
-
-            RuleFor(a => a.Start_date).NotEmpty().GreaterThanOrEqualTo(DateTime.Now);
-            RuleFor(a => a.End_date).NotEmpty().GreaterThan(a => a.Start_date);
-            RuleFor(a => a.state).IsInEnum();
-
-
+            RuleFor(a => a.EndDate.ToUniversalTime()).NotEmpty().GreaterThan(DateTime.UtcNow);
         }
     }
 }
