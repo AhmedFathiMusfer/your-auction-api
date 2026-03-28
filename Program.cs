@@ -23,6 +23,7 @@ using your_auction_api;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
+using your_auction_api.BackgroundServices;
 
 internal class Program
 {
@@ -108,8 +109,13 @@ internal class Program
         builder.Services.AddScoped<ICategoryService, CategoryService>();
         builder.Services.AddScoped<IStripeCustomerRepository, StripeCustomerRepository>();
         builder.Services.AddScoped<IStripeCustomerService, StripeCustomerService>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddMemoryCache();
         builder.Services.AddScoped<IFileService, your_auction_api.Services.FileService>();
+            builder.Services.AddScoped<IChatAIService, ChatAIService>();
+        // تسجيل خدمة مراقبة المزادات
+        builder.Services.AddHostedService<AuctionMonitorService>();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

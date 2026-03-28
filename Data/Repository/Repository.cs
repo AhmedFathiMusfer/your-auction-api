@@ -73,6 +73,16 @@ namespace your_auction_api.Data.Repository
             return await Query.FirstOrDefaultAsync();
         }
 
+        public Task<int> GetCountAsync(Expression<Func<T, bool>>? filter = null)
+        {
+            IQueryable<T> Query = Entity;
+            if (filter != null)
+            {
+                Query = Query.Where(filter);
+            }
+            return Query.CountAsync();
+        }
+
         public async Task RemoveAsync(T obj)
         {
             Entity.Remove(obj);

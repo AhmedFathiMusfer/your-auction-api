@@ -39,7 +39,9 @@ namespace your_auction_api.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
-            builder.Entity<Auction>().Property(a => a.state).HasConversion<int>();
+            builder.Entity<Auction>().Property(a => a.status).HasConversion<int>();
+            base.OnModelCreating(builder);
+            builder.Entity<ApplicationUser>().Property(a => a.status).HasConversion<int>();
             base.OnModelCreating(builder);
         }
 

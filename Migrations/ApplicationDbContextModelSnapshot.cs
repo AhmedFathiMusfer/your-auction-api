@@ -163,6 +163,9 @@ namespace your_auction_api.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -215,6 +218,9 @@ namespace your_auction_api.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int>("status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -245,7 +251,7 @@ namespace your_auction_api.Migrations
                     b.Property<DateTime>("Start_date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("state")
+                    b.Property<int>("status")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

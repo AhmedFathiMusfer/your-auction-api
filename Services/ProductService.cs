@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using your_auction_api.Data.Repository.IRepository;
 using your_auction_api.Models;
 using your_auction_api.Models.Dto;
+using your_auction_api.Models.Specifications;
 using your_auction_api.Services.IServices;
 
 namespace your_auction_api.Services
@@ -89,9 +90,15 @@ namespace your_auction_api.Services
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<PoroductResponceDto>> getProductById(int productId)
+        public async Task<ErrorOr<int>> GetCountProducts()
         {
-            var product = (await _productRepository.GetWithDetailsAsync(p => p.Id == productId)).FirstOrDefault();
+            var count = await _productRepository.GetCountAsync();
+            return count;
+        }
+
+        public async Task<ErrorOr<PorductResponceDto>> getProductById(int productId)
+        {
+            var product = await _productRepository.GetWithDetailsAsync(productId);
             if (product is null)
             {
                 return Error.NotFound(description: "the product  not found");
@@ -100,9 +107,9 @@ namespace your_auction_api.Services
             return product;
         }
 
-        public async Task<ErrorOr<List<PoroductResponceDto>>> GetProducts()
+        public async Task<ErrorOr<PaginatedResult<PorductResponceDto>>> GetProducts(ProductSpecification spec)
         {
-            var products = await _productRepository.GetWithDetailsAsync();
+            var products = await _productRepository.GetWithDetailsAsync(spec);
 
 
             return products;

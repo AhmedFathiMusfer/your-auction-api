@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using your_auction_api.Data.Repository.IRepository;
 using your_auction_api.Models;
 using your_auction_api.Models.Dto;
+using your_auction_api.Models.Specifications;
 
 namespace your_auction_api.Data.Repository
 {
@@ -16,18 +17,10 @@ namespace your_auction_api.Data.Repository
             _db = db;
         }
 
-        public async Task<List<PoroductResponceDto>> GetWithDetailsAsync(Expression<Func<Product, bool>>? filter = null, int pageSize = 0, int pageNumber = 1)
+        public async Task<PaginatedResult<PorductResponceDto>> GetWithDetailsAsync(ProductSpecification spec)
         {
-            IQueryable<Product> query = _db.products;
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-            if (pageSize > 0 && pageNumber > 0)
-            {
-                query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-            }
-            var result = await query.Select(p => new PoroductResponceDto
+            var products = await ApplySpecification(spec);
+            var porductsDetails = await products.Select(p => new PorductResponceDto
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -41,7 +34,33 @@ namespace your_auction_api.Data.Repository
                 CategoryId = p.CategoryId,
                 images = p.ProductImages.Select(pi => pi.ImageUrl).ToList()
             }).ToListAsync();
+            var result = new PaginatedResult<PorductResponceDto>(
+                  porductsDetails,
+                  spec.TotalCount,
+                  spec.PageNumber,
+                  spec.PageSize
+              );
+
             return result;
+        }
+
+        public async Task<PorductResponceDto> GetWithDetailsAsync(int productId)
+        {
+            var product = await _db.products.Where(p => p.Id == productId).Select(p => new PorductResponceDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Quantity = p.Quantity,
+                Price = p.Price,
+                sellerName = p.User.Name,
+                IsChecked = p.IsChecked,
+                Emp_note = p.Emp_note,
+                CategoryName = p.Category.Name,
+                CategoryId = p.CategoryId,
+                images = p.ProductImages.Select(pi => pi.ImageUrl).ToList()
+            }).FirstOrDefaultAsync();
+            return product;
         }
 
         public async Task UpdateAsync(Product obj)
@@ -50,6 +69,48 @@ namespace your_auction_api.Data.Repository
             await SaveAsync();
 
         }
+        private async Task<IQueryable<Product>> ApplySpecification(ProductSpecification spec)
+        {
+            IQueryable<Product> products = _db.products;
+            if (!string.IsNullOrEmpty(spec.Search))
+            {
+                products = products.Where(a => a.Name.ToLower().Contains(spec.Search.ToLower()));
+            }
+            if (spec.PageNumber > 0 && spec.PageSize > 0)
+            {
+                spec.TotalCount = await products.CountAsync();
+                if (spec.PageSize > 100)
+                {
+                    spec.PageSize = 100;
+                }
+            }
+            else
+            {
+                spec.PageNumber = 1;
+                spec.PageSize = 10;
+
+            }
+
+            if (string.IsNullOrEmpty(spec.OrderBy))
+            {
+                products = products.OrderByDescending(a => a.Id);
+            }
+            else
+            {
+                if (spec.OrderDirection == "desc")
+                {
+                    products = products.OrderByDescending(a => EF.Property<object>(a, spec.OrderBy));
+                }
+                else
+                {
+                    products = products.OrderBy(a => EF.Property<object>(a, spec.OrderBy));
+                }
+            }
+
+            products = products.Skip(spec.PageSize * (spec.PageNumber - 1)).Take(spec.PageSize);
+            return products;
+        }
+
 
 
     }

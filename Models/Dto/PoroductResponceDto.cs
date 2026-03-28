@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace your_auction_api.Models.Dto
 {
-    public class PoroductResponceDto
+    public class PorductResponceDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

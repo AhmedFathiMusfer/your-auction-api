@@ -114,11 +114,6 @@ C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\your-auc
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\your-auction-api.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets.development.json
-C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets\msbuild.your-auction-api.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets\msbuild.build.your-auction-api.props
-C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.your-auction-api.props
-C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.your-auction-api.props
-C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\scopedcss\bundle\your-auction-api.styles.css
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\your-auc.903CD128.Up2Date
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\your-auction-api.dll
@@ -142,3 +137,10 @@ C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Microsof
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
 C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\Stripe.net.dll
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\bin\Debug\net8.0\your-auction-api.staticwebassets.endpoints.json
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\AhmedMusfer\your-auction-api\your-auction-api\obj\Debug\net8.0\staticwebassets.build.endpoints.json

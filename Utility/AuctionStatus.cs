@@ -1,6 +1,6 @@
 namespace your_auction_api.Utility
 {
-    public enum AuctionState
+    public enum AuctionStatus
     {
         Pending = 0,
         Active = 1,

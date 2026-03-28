@@ -13,7 +13,7 @@ namespace your_auction_api.Models
 
         [ForeignKey("Product")]
         public int ProductId { get; set; }
-        public AuctionState state { get; set; }
+        public AuctionStatus status { get; set; }
 
         public DateTime Start_date { get; set; }
         public DateTime End_date { get; set; }

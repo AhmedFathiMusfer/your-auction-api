@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using your_auction_api.Models;
 using your_auction_api.Models.Dto;
+using your_auction_api.Models.Specifications;
 using your_auction_api.Services.IServices;
 
 
@@ -27,14 +28,15 @@ namespace your_auction_api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAuctions()
+        public async Task<IActionResult> GetAuctions([FromQuery] AuctionSpecification specification)
         {
-            var result = await _auctionService.GetAuctions();
+            var result = await _auctionService.GetAuctions(specification);
             return result.Match(
                 auctions => Ok(auctions),
-                 Problem
+                Problem
             );
         }
+
 
         [HttpGet("{auctionId}")]
         public async Task<IActionResult> getAuctionById(int auctionId)
@@ -110,9 +112,9 @@ namespace your_auction_api.Controllers
             );
         }
         [HttpGet("WithDetails")]
-        public async Task<IActionResult> getAllWithDetails()
+        public async Task<IActionResult> getAllWithDetails([FromQuery] AuctionSpecification spec)
         {
-            var result = await _auctionService.getAllAuctionsWithDetails();
+            var result = await _auctionService.getAllAuctionsWithDetails(spec);
             return result.Match(
                 auctionDetails => Ok(auctionDetails),
                 Problem
@@ -126,6 +128,14 @@ namespace your_auction_api.Controllers
                 auctionUsers => Ok(auctionUsers),
                 Problem
             );
+        }
+        [HttpGet("Count")]
+        public async Task<IActionResult> GetCountAuctions()
+        {
+            var result = await _auctionService.GetCountAuctions();
+            return result.Match(
+               Count => Ok(new { count = Count })
+                , Problem);
         }
 
 

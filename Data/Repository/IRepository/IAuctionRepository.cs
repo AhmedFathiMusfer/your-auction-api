@@ -3,6 +3,7 @@
 using System.Linq.Expressions;
 using your_auction_api.Models;
 using your_auction_api.Models.Dto;
+using your_auction_api.Models.Specifications;
 
 namespace your_auction_api.Data.Repository.IRepository
 {
@@ -10,7 +11,8 @@ namespace your_auction_api.Data.Repository.IRepository
     {
         Task UpdateAsync(Auction obj);
 
-        Task<List<AuctionDetailsDto>> GetWithDetailsAsync(Expression<Func<Auction, bool>>? filter = null);
-
+        Task<PaginatedResult<AuctionDetailsDto>> GetWithDetailsAsync(AuctionSpecification spec);
+         Task<AuctionDetailsDto> GetWithDetailsAsync(int auctionId);
+        Task<PaginatedResult<Auction>> GetAll(AuctionSpecification spec);
     }
 }

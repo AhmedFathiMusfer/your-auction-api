@@ -16,6 +16,7 @@ using your_auction_api.Models.Dto;
 using your_auction_api.Services.IServices;
 using your_auction_api.Utility;
 using Microsoft.Identity.Client;
+using your_auction_api.Models.Specifications;
 
 namespace your_auction_api.Services
 {
@@ -51,7 +52,7 @@ namespace your_auction_api.Services
             {
                 ProductId = auctionDto.ProductId,
                 Start_date = DateTime.UtcNow,
-                state = AuctionState.Active,
+                status = AuctionStatus.Active,
                 End_date = auctionDto.EndDate.ToUniversalTime(),
             };
 
@@ -69,9 +70,9 @@ namespace your_auction_api.Services
             {
                 return Error.NotFound("this aucthion is not found");
             }
-            if (auction.state != AuctionState.Active)
+            if (auction.status != AuctionStatus.Active)
             {
-                return Error.Validation(code: "state", description: $"this aucthion state is {auction.state}");
+                return Error.Validation(code: "state", description: $"this aucthion state is {auction.status}");
             }
             var UserId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             if (UserId is null)
@@ -108,11 +109,11 @@ namespace your_auction_api.Services
             {
                 return Error.Unauthorized(description: "an Unauthorized");
             }
-            if (auction.state != AuctionState.Active)
+            if (auction.status != AuctionStatus.Active)
             {
-                return Error.Validation(code: "state", description: $"this aucthion state is {auction.state}");
+                return Error.Validation(code: "state", description: $"this aucthion state is {auction.status}");
             }
-            auction.state = AuctionState.Canceled;
+            auction.status = AuctionStatus.Canceled;
             await _auctionRepository.UpdateAsync(auction);
             return Result.Success;
         }
@@ -133,7 +134,7 @@ namespace your_auction_api.Services
 
         public async Task<ErrorOr<AuctionDetailsDto>> getAuctionWithDetails(int auctionId)
         {
-            var auctionDetails = (await _auctionRepository.GetWithDetailsAsync(a => a.Id == auctionId)).FirstOrDefault();
+            var auctionDetails = await _auctionRepository.GetWithDetailsAsync(auctionId);
             if (auctionDetails is null)
             {
                 return Error.NotFound("this auction not found");
@@ -151,12 +152,15 @@ namespace your_auction_api.Services
             return auction;
         }
 
-        public async Task<ErrorOr<List<Auction>>> GetAuctions()
+        public async Task<ErrorOr<PaginatedResult<Auction>>> GetAuctions(AuctionSpecification spec)
         {
+            var auctions = await _auctionRepository.GetAll(spec);
+
+
             // changeStateAuctionWhenEndDate();
-            var auctions = await _auctionRepository.GetAllAsync();
             return auctions;
         }
+
 
 
         public async Task<ErrorOr<List<AuctionUserDto>>> getAuctionUsers(int AuctionId)
@@ -191,10 +195,10 @@ namespace your_auction_api.Services
         }
         private void changeStateAuctionWhenEndDate()
         {
-            var auctions = _auctionRepository.GetAllAsync(a => a.End_date < DateTime.Now && a.state == AuctionState.Active).Result;
+            var auctions = _auctionRepository.GetAllAsync(a => a.End_date < DateTime.Now && a.status == AuctionStatus.Active).Result;
             foreach (var auction in auctions)
             {
-                auction.state = AuctionState.Completed;
+                auction.status = AuctionStatus.Completed;
 
                 _auctionRepository.UpdateAsync(auction).Wait();
 
@@ -205,9 +209,9 @@ namespace your_auction_api.Services
 
         }
 
-        public async Task<ErrorOr<List<AuctionDetailsDto>>> getAllAuctionsWithDetails()
+        public async Task<ErrorOr<PaginatedResult<AuctionDetailsDto>>> getAllAuctionsWithDetails(AuctionSpecification spec)
         {
-            var aucthionsWithDetails = await _auctionRepository.GetWithDetailsAsync();
+            var aucthionsWithDetails = await _auctionRepository.GetWithDetailsAsync(spec);
             return aucthionsWithDetails;
         }
 
@@ -218,13 +222,19 @@ namespace your_auction_api.Services
             {
                 return Error.NotFound(description: "theis auction not found");
             }
-            if (!(auction.state == AuctionState.Active && auction.End_date <= DateTime.Now))
+            if (!(auction.status == AuctionStatus.Active && auction.End_date <= DateTime.Now))
             {
                 return Error.Validation("error in date");
             }
-            auction.state = AuctionState.Completed;
+            auction.status = AuctionStatus.Completed;
             await _auctionRepository.UpdateAsync(auction);
             return Result.Success;
+        }
+
+        public async Task<ErrorOr<int>> GetCountAuctions()
+        {
+            var count = await _auctionRepository.GetCountAsync(a => a.status == AuctionStatus.Active);
+            return count;
         }
     }
 }

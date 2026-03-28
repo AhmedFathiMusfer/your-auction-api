@@ -10,6 +10,8 @@ namespace your_auction_api.Data.Repository.IRepository
         Task CreateAsync(T obj);
 
         Task RemoveAsync(T obj);
+        Task<int> GetCountAsync(Expression<Func<T, bool>>? filter = null);
         Task SaveAsync();
+
     }
 }

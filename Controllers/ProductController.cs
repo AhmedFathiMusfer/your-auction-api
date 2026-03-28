@@ -9,6 +9,7 @@ using your_auction_api.Services.IServices;
 using your_auction_api.Models;
 using Microsoft.AspNetCore.Authorization;
 using your_auction_api.Models.Dto;
+using your_auction_api.Models.Specifications;
 
 namespace your_auction_api.Controllers
 {
@@ -25,9 +26,9 @@ namespace your_auction_api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> getAll()
+        public async Task<IActionResult> getAll([FromQuery] ProductSpecification spec)
         {
-            var result = await _productService.GetProducts();
+            var result = await _productService.GetProducts(spec);
 
             return result.Match(
                result => Ok(result),
@@ -77,6 +78,15 @@ namespace your_auction_api.Controllers
                Problem
               );
         }
+        [HttpGet("Count")]
+        public async Task<IActionResult> GetCountProducts()
+        {
+            var result = await _productService.GetCountProducts();
+            return result.Match(
+               Count => Ok(new { count = Count })
+                , Problem);
+        }
+
 
 
 
