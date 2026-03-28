@@ -113,7 +113,7 @@ internal class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddMemoryCache();
         builder.Services.AddScoped<IFileService, your_auction_api.Services.FileService>();
-            builder.Services.AddScoped<IChatAIService, ChatAIService>();
+        builder.Services.AddScoped<IChatAIService, ChatAIService>();
         // تسجيل خدمة مراقبة المزادات
         builder.Services.AddHostedService<AuctionMonitorService>();
         var app = builder.Build();
