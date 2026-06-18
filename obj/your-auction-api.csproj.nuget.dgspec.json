@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj": {}
+    "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj": {
+    "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
+        "projectUniqueName": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
         "projectName": "your-auction-api",
-        "projectPath": "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
+        "projectPath": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
         "packagesPath": "C:\\Users\\AhmedMusfer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\obj\\",
+        "outputPath": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\AhmedMusfer\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -95,6 +95,10 @@
             "Microsoft.EntityFrameworkCore.Sqlserver": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "OpenAI": {
+              "target": "Package",
+              "version": "[2.9.1, )"
             },
             "Stripe.net": {
               "target": "Package",
