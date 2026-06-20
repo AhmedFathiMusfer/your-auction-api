@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "No3vhicNN58=",
+  "dgSpecHash": "RmvHPjyfwFo=",
   "success": true,
-  "projectFilePath": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
+  "projectFilePath": "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\AhmedMusfer\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\AhmedMusfer\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
@@ -101,20 +101,10 @@
     "C:\\Users\\AhmedMusfer\\.nuget\\packages\\system.text.json\\10.0.1\\system.text.json.10.0.1.nupkg.sha512",
     "C:\\Users\\AhmedMusfer\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512",
     "C:\\Users\\AhmedMusfer\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-    "C:\\Users\\AhmedMusfer\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.25\\microsoft.netcore.app.ref.8.0.25.nupkg.sha512",
-    "C:\\Users\\AhmedMusfer\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.25\\microsoft.windowsdesktop.app.ref.8.0.25.nupkg.sha512",
-    "C:\\Users\\AhmedMusfer\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.25\\microsoft.aspnetcore.app.ref.8.0.25.nupkg.sha512",
-    "C:\\Users\\AhmedMusfer\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.25\\microsoft.netcore.app.host.win-x64.8.0.25.nupkg.sha512"
+    "C:\\Users\\AhmedMusfer\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.26\\microsoft.netcore.app.ref.8.0.26.nupkg.sha512",
+    "C:\\Users\\AhmedMusfer\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.26\\microsoft.windowsdesktop.app.ref.8.0.26.nupkg.sha512",
+    "C:\\Users\\AhmedMusfer\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.26\\microsoft.aspnetcore.app.ref.8.0.26.nupkg.sha512",
+    "C:\\Users\\AhmedMusfer\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.26\\microsoft.netcore.app.host.win-x64.8.0.26.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
-      "projectPath": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
-      "warningLevel": 1,
-      "filePath": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }

@@ -4981,11 +4981,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
+      "projectUniqueName": "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
       "projectName": "your-auction-api",
-      "projectPath": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
+      "projectPath": "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\your-auction-api.csproj",
       "packagesPath": "C:\\Users\\AhmedMusfer\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\obj\\",
+      "outputPath": "C:\\Users\\AhmedMusfer\\your-auction-api\\your-auction-api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\AhmedMusfer\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -5014,7 +5014,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.300"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net8.0": {
@@ -5097,19 +5097,19 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.25, 8.0.25]"
+            "version": "[8.0.26, 8.0.26]"
           },
           {
             "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[8.0.25, 8.0.25]"
+            "version": "[8.0.26, 8.0.26]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.25, 8.0.25]"
+            "version": "[8.0.26, 8.0.26]"
           },
           {
             "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[8.0.25, 8.0.25]"
+            "version": "[8.0.26, 8.0.26]"
           }
         ],
         "frameworkReferences": {
@@ -5120,16 +5120,8 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.312/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
-    }
-  ]
+  }
 }
