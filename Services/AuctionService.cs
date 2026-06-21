@@ -74,7 +74,7 @@ namespace your_auction_api.Services
             {
                 return Error.Validation(code: "state", description: $"this aucthion state is {auction.status}");
             }
-            var UserId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var UserId = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (UserId is null)
             {
                 return Error.Unauthorized(description: "an Unauthorized");
