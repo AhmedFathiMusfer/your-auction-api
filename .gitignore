@@ -1,3 +1,24 @@
+.vs/
 bin/
-/obj/**
+obj/
+
+# Local configuration and secrets
+appsettings.Development.json
 appsettings.json
+
+# Visual Studio / Rider / editor files
+*.user
+*.suo
+*.userosscache
+*.rsuser
+*.swp
+*.tmp
+
+# Build and test outputs
+TestResults/
+coverage/
+
+# OS artifacts
+Thumbs.db
+Desktop.ini
+.DS_Store
