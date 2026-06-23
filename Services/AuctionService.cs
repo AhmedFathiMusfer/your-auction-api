@@ -17,6 +17,7 @@ using your_auction_api.Services.IServices;
 using your_auction_api.Utility;
 using Microsoft.Identity.Client;
 using your_auction_api.Models.Specifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace your_auction_api.Services
 {
@@ -79,9 +80,18 @@ namespace your_auction_api.Services
             {
                 return Error.Unauthorized(description: "an Unauthorized");
             }
+            if (auction.Product.UserId == UserId)
+            {
+                return Error.Validation(code: "AuctionValue", description: "the product owner cannot bid on their own product");
+            }
             if (AuctionValue < auction.Product.Price)
             {
                 return Error.Validation(code: "AuctionValue", description: $"the price is unvaild becuse shold be greater than Or equal To {auction.Product.Price}");
+            }
+            var currentMaxBid = await _auctionUserRepository.GetAllAsync(x => x.AuctionId == auctionId);
+            if (currentMaxBid.Any() && AuctionValue <= currentMaxBid.Max(x => x.AuctionValue))
+            {
+                return Error.Validation(code: "AuctionValue", description: "the bid must be greater than the current highest bid");
             }
             var auctionUser = new AuctionUser
             {
@@ -104,7 +114,7 @@ namespace your_auction_api.Services
             {
                 return Error.NotFound("this aucthion is not found");
             }
-            var UserId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var UserId = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             if (UserId is null)
             {
                 return Error.Unauthorized(description: "an Unauthorized");
@@ -187,7 +197,9 @@ namespace your_auction_api.Services
             {
                 Id = auctionDto.Id,
                 ProductId = auctionDto.ProductId,
-                End_date = auctionDto.EndDate
+                End_date = auctionDto.EndDate,
+                Start_date = oldAuction.Start_date,
+                status = oldAuction.status
             };
 
             await _auctionRepository.UpdateAsync(auction);
@@ -222,7 +234,7 @@ namespace your_auction_api.Services
             {
                 return Error.NotFound(description: "theis auction not found");
             }
-            if (!(auction.status == AuctionStatus.Active && auction.End_date <= DateTime.Now))
+            if (!(auction.status == AuctionStatus.Active && auction.End_date <= DateTime.UtcNow))
             {
                 return Error.Validation("error in date");
             }
