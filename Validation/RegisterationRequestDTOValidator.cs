@@ -13,6 +13,7 @@ namespace your_auction_api.Validation
         {
             RuleFor(r => r.email).EmailAddress().NotEmpty().NotNull();
             RuleFor(r => r.Password).NotEmpty().NotNull();
+            RuleFor(r => r.Name).NotEmpty().NotNull();
         }
 
     }
