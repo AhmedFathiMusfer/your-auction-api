@@ -10,11 +10,11 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using your_auction_api.Data;
 using your_auction_api.Models;
 using your_auction_api.Models.Dto;
 using your_auction_api.Services.IServices;
+using your_auction_api.Utility;
 
 namespace your_auction_api.Services
 {
@@ -117,19 +117,8 @@ namespace your_auction_api.Services
 
                 if (result.Succeeded)
                 {
-                    if (!_roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
-                    {
-                        await _roleManager.CreateAsync(new IdentityRole("admin"));
-                        await _roleManager.CreateAsync(new IdentityRole("customer"));
-                    }
-                    if (!_roleManager.RoleExistsAsync(regitsterationRequestDTO.Role).GetAwaiter().GetResult())
-                    {
-                        await _userManager.AddToRoleAsync(user, "customer");
-                    }
-                    else
-                    {
-                        await _userManager.AddToRoleAsync(user, regitsterationRequestDTO.Role);
-                    }
+                    await EnsureRolesCreatedAsync();
+                    await _userManager.AddToRoleAsync(user, Roles.Client);
 
 
                     var UserToReturn = _db.Users.FirstOrDefault(u => u.UserName == regitsterationRequestDTO.email);
@@ -168,15 +157,29 @@ namespace your_auction_api.Services
                 Subject = new ClaimsIdentity(
                 [
                     new Claim(ClaimTypes.Name, user.UserName.ToString()),
-                    new Claim(ClaimTypes.Role, JsonConvert.SerializeObject(role)),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti,JWTTokenId),
-                    new Claim(JwtRegisteredClaimNames.Sub,user.Id)
+                    new Claim(JwtRegisteredClaimNames.Sub,user.Id),
+                    .. role.Select(r => new Claim(ClaimTypes.Role, r))
                 ]),
-                Expires = DateTime.UtcNow.AddMinutes(60),
+                Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = new(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenhandeler.CreateToken(tokenDescriptor);
             return tokenhandeler.WriteToken(token);
+        }
+
+        private async Task EnsureRolesCreatedAsync()
+        {
+            if (!await _roleManager.RoleExistsAsync(Roles.Admin))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+            }
+
+            if (!await _roleManager.RoleExistsAsync(Roles.Client))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(Roles.Client));
+            }
         }
 
         private bool GetAccessTokenData(string AccessToken, string excectedUserId, string excectedTokenId)
