@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using your_auction_api.Services.IServices;
 using your_auction_api.Models;
+using your_auction_api.Utility;
 
 namespace your_auction_api.Controllers
 {
 
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = Roles.Admin)]
     public class CategoryController : ApiController
     {
         private readonly ICategoryService _categoryService;
