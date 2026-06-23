@@ -9,6 +9,7 @@ using your_auction_api.Models;
 using your_auction_api.Models.Dto;
 using your_auction_api.Models.Specifications;
 using your_auction_api.Services.IServices;
+using your_auction_api.Utility;
 
 
 namespace your_auction_api.Controllers
@@ -49,6 +50,7 @@ namespace your_auction_api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> AddAuction(AuctionDto auctionDto)
         {
             var result = await _auctionService.AddAuction(auctionDto);
@@ -58,7 +60,7 @@ namespace your_auction_api.Controllers
             );
         }
         [HttpPost("{auctionId}/addBider")]
-        public async Task<IActionResult> AddAuctionUser([FromForm] int auctionId, decimal AuctionValue)
+        public async Task<IActionResult> AddAuctionUser(int auctionId, [FromBody] decimal AuctionValue)
         {
             var result = await _auctionService.AddAuctionUser(auctionId, AuctionValue);
             return result.Match(
@@ -67,6 +69,7 @@ namespace your_auction_api.Controllers
             );
         }
         [HttpPut("{auctionId}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> UpdateAuction(int auctionId, [FromBody] AuctionDto auctionDto)
         {
             var result = await _auctionService.UpdateAuction(auctionId, auctionDto);
@@ -76,6 +79,7 @@ namespace your_auction_api.Controllers
             );
         }
         [HttpPut("{auctionId}/Canceled")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CanceledAuction(int auctionId)
         {
             var result = await _auctionService.CanceledAuction(auctionId);
@@ -85,6 +89,7 @@ namespace your_auction_api.Controllers
             );
         }
         [HttpPut("{auctionId}/Completed")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CompletedAuction(int auctionId)
         {
             var result = await _auctionService.CompletedAuction(auctionId);
@@ -94,6 +99,7 @@ namespace your_auction_api.Controllers
             );
         }
         [HttpDelete("{auctionId}")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> DeleteAuction(int auctionId)
         {
             var result = await _auctionService.DeleteAuction(auctionId);
