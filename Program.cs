@@ -24,6 +24,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using your_auction_api.BackgroundServices;
+using your_auction_api.Utility;
 
 internal class Program
 {
@@ -132,11 +133,12 @@ internal class Program
 
         }
         app.UseStaticFiles();
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
         app.UseCors("CorsPolicy");
         app.UseAuthentication();
         app.UseAuthorization();
         StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripeKey:SecretKey");
+        SeedIdentityData(app);
         app.MapControllers();
         ApplyMigrations();
 
@@ -150,6 +152,51 @@ internal class Program
                 if (_db.Database.GetPendingMigrations().Count() > 0)
                 {
                     _db.Database.Migrate();
+                }
+            }
+        }
+
+        void SeedIdentityData(WebApplication application)
+        {
+            using var scope = application.Services.CreateScope();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            if (!roleManager.RoleExistsAsync(Roles.Admin).GetAwaiter().GetResult())
+            {
+                roleManager.CreateAsync(new IdentityRole(Roles.Admin)).GetAwaiter().GetResult();
+            }
+
+            if (!roleManager.RoleExistsAsync(Roles.Client).GetAwaiter().GetResult())
+            {
+                roleManager.CreateAsync(new IdentityRole(Roles.Client)).GetAwaiter().GetResult();
+            }
+
+            var adminEmail = configuration["SeedAdmin:Email"];
+            var adminPassword = configuration["SeedAdmin:Password"];
+            if (!string.IsNullOrWhiteSpace(adminEmail) && !string.IsNullOrWhiteSpace(adminPassword))
+            {
+                var adminUser = userManager.FindByEmailAsync(adminEmail).GetAwaiter().GetResult();
+                if (adminUser is null)
+                {
+                    adminUser = new ApplicationUser
+                    {
+                        UserName = adminEmail,
+                        Email = adminEmail,
+                        Name = "Administrator",
+                        PhoneNumber = string.Empty
+                    };
+
+                    var createResult = userManager.CreateAsync(adminUser, adminPassword).GetAwaiter().GetResult();
+                    if (createResult.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(adminUser, Roles.Admin).GetAwaiter().GetResult();
+                    }
+                }
+                else if (!userManager.IsInRoleAsync(adminUser, Roles.Admin).GetAwaiter().GetResult())
+                {
+                    userManager.AddToRoleAsync(adminUser, Roles.Admin).GetAwaiter().GetResult();
                 }
             }
         }
