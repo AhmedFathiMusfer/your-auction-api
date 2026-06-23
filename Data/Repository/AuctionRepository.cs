@@ -86,6 +86,7 @@ namespace your_auction_api.Data.Repository
                 SalleName = a.Product.User.Name,
                 StartDate = a.Start_date,
                 price = a.Product.Price,
+                Description = a.Product.Description,
                 quantity = a.Product.Quantity,
                 ImagesUrl = a.Product.ProductImages.Select(i => i.ImageUrl).ToList(),
                 EndDate = a.End_date,
@@ -96,7 +97,7 @@ namespace your_auction_api.Data.Repository
 
 
             });
-            return auctionDetails.FirstOrDefault();
+            return await auctionDetails.FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(Auction obj)
